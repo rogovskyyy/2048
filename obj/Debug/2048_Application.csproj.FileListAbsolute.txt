@@ -1,0 +1,11 @@
+C:\Users\BARTOSZ\source\repos\2048_Application\2048_Application\bin\Debug\2048_Application.exe.config
+C:\Users\BARTOSZ\source\repos\2048_Application\2048_Application\bin\Debug\2048_Application.exe
+C:\Users\BARTOSZ\source\repos\2048_Application\2048_Application\bin\Debug\2048_Application.pdb
+C:\Users\BARTOSZ\source\repos\2048_Application\2048_Application\obj\Debug\2048_Application.csprojAssemblyReference.cache
+C:\Users\BARTOSZ\source\repos\2048_Application\2048_Application\obj\Debug\_2048_Application.Form1.resources
+C:\Users\BARTOSZ\source\repos\2048_Application\2048_Application\obj\Debug\_2048_Application.Properties.Resources.resources
+C:\Users\BARTOSZ\source\repos\2048_Application\2048_Application\obj\Debug\2048_Application.csproj.GenerateResource.cache
+C:\Users\BARTOSZ\source\repos\2048_Application\2048_Application\obj\Debug\2048_Application.csproj.CoreCompileInputs.cache
+C:\Users\BARTOSZ\source\repos\2048_Application\2048_Application\obj\Debug\2048_Application.exe
+C:\Users\BARTOSZ\source\repos\2048_Application\2048_Application\obj\Debug\2048_Application.pdb
+C:\Users\BARTOSZ\source\repos\2048_Application\2048_Application\obj\Debug\2048_Application.g.resources
