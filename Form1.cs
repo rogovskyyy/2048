@@ -11,6 +11,7 @@ using System.Runtime.InteropServices;
 using System.Diagnostics;
 using System.Windows.Input;
 using System.Drawing.Text;
+using System.IO;
 
 namespace _2048_Application
 {
@@ -52,13 +53,14 @@ namespace _2048_Application
         }
         protected Label[,] labels = new Label[4, 4];
         protected int[,] Board = new int[4, 4] { { 0, 0, 0, 0 }, { 0, 0, 0, 0 }, { 0, 0, 0, 0 }, { 0, 0, 0, 0 } };
+        protected int POINTS = 0;
 
         protected void GenerateBoard()
         {
             PrivateFontCollection pfc = new PrivateFontCollection();
             pfc.AddFontFile("ClearSans-Bold.ttf");
             int x_box = 30;
-            int y_box = 90;
+            int y_box = 180;
             for (int j = 0; j <= 3; j++)
             {
                 for (int i = 0; i <= 3; i++)
@@ -108,6 +110,7 @@ namespace _2048_Application
                     }      
                 }
             }
+            label6.Text = POINTS.ToString();
         }
         private void ReturnArray()
         {
@@ -158,7 +161,12 @@ namespace _2048_Application
             }
             else
             {
-                MessageBox.Show("Koniec gry", "Koniec gry", MessageBoxButtons.OKCancel);
+                if (POINTS > Int32.Parse(label7.Text))
+                {
+                    label7.Text = POINTS.ToString();
+                }
+                MessageBox.Show("Koniec gry", "Koniec gry", MessageBoxButtons.OK);
+                RestartGame();
             }
         }
         private int[] BLOCK_MOVE = new int[4] { 0, 0, 0, 0 };
@@ -179,11 +187,12 @@ namespace _2048_Application
                             }
                             else if (Board[y, z] != 0 && Board[y, z] != Board[y, z + 1])
                             {
-
+                                BLOCK_MOVE[0]++;
                             }
                             else if (Board[y, z] == Board[y, z + 1])
                             {
                                 Board[y, z] = Board[y, z + 1] * 2;
+                                POINTS += Board[y, z + 1] * 2;
                                 Board[y, z + 1] = 0;
                             }
                         }
@@ -208,11 +217,12 @@ namespace _2048_Application
                             }
                             else if (Board[z, x] != 0 && Board[z, x] != Board[z + 1, x])
                             {
-
+                                BLOCK_MOVE[1]++;
                             }
                             else if (Board[z, x] == Board[z + 1, x])
                             {
                                 Board[z, x] = Board[z + 1, x] * 2;
+                                POINTS += Board[z + 1, x] * 2;
                                 Board[z + 1, x] = 0;
                             }
                         }
@@ -237,11 +247,12 @@ namespace _2048_Application
                             }
                             else if (Board[y, z] != 0 && Board[y, z] != Board[y, z - 1])
                             {
-
+                                BLOCK_MOVE[2]++;
                             }
                             else if (Board[y, z] == Board[y, z - 1])
                             {
                                 Board[y, z] = Board[y, z - 1] * 2;
+                                POINTS += Board[y, z - 1] * 2;
                                 Board[y, z - 1] = 0;
                             }
                         }
@@ -266,11 +277,12 @@ namespace _2048_Application
                             }
                             else if (Board[z, x] != 0 && Board[z, x] != Board[z - 1, x])
                             {
-
+                                BLOCK_MOVE[3]++;
                             }
                             else if (Board[z, x] == Board[z - 1, x])
                             {
                                 Board[z, x] = Board[z - 1, x] * 2;
+                                POINTS += Board[z - 1, x] * 2;
                                 Board[z - 1, x] = 0;
                             }
                         }
@@ -286,7 +298,6 @@ namespace _2048_Application
             GenerateBoard();
             FirstPoint();
             RefreshStatus();
-            
             pressedList.Add(Keys.Space.ToString());
         }
         private void Form1_Load(object sender, EventArgs e)
@@ -300,66 +311,68 @@ namespace _2048_Application
             {
                 case (Keys.Left):
                     pressedList.Add(pressedKey);
-                    if(pressedList[pressedList.Count() - 2] != pressedKey)
+                    if(!pressedList[pressedList.Count() - 2].Equals(pressedKey.ToString()))
                     {
-                        BLOCK_MOVE[0] = 0;
+                        BLOCK_MOVE[0] = 0; BLOCK_MOVE[1] = 0; BLOCK_MOVE[2] = 0; BLOCK_MOVE[3] = 0;
                     }
-                    if (BLOCK_MOVE[0] == 0)
-                    {
                         mLeft();
-                        ShuffleNumber();
+                    if (BLOCK_MOVE[0] <= 24)
+                    {
+                            ShuffleNumber();
+                    }
+                        OpenConsoleToDebugMode();
                         ReturnArray();
                         RefreshStatus();
-                        Console.Write("{0}, {1}, {2} |", BLOCK_MOVE[0], pressedKey, pressedList[pressedList.Count() - 2]);
-                    }
+                        Console.Write("{0}, {1}, {2}, {3}, {4} |", BLOCK_MOVE[0], pressedList[pressedList.Count() - 2], pressedList[pressedList.Count() - 1], pressedKey, POINTS);
+
                     break;
 
                 case (Keys.Up):
                     pressedList.Add(pressedKey);
-                    if (pressedList[pressedList.Count() - 2] != pressedKey)
+                    if (!pressedList[pressedList.Count() - 2].Equals(pressedList[pressedList.Count() - 1].ToString()))
                     {
-                        BLOCK_MOVE[1] = 0;
+                        BLOCK_MOVE[0] = 0; BLOCK_MOVE[1] = 0; BLOCK_MOVE[2] = 0; BLOCK_MOVE[3] = 0;
                     }
-                    if (BLOCK_MOVE[1] == 0)
-                    {
                         mUp();
+                    if (BLOCK_MOVE[1] <= 24)
+                    {
                         ShuffleNumber();
+                    }
                         ReturnArray();
                         RefreshStatus();
-                        Console.Write("{0}, {1}, {2} |", BLOCK_MOVE[1], pressedKey, pressedList[pressedList.Count() - 2]);
-                    }
+                        Console.Write("{0}, {1}, {2}, {3}, {4} |", BLOCK_MOVE[1], pressedList[pressedList.Count() - 2], pressedList[pressedList.Count() - 1], pressedKey, POINTS);
                     break;
 
                 case (Keys.Right):
                     pressedList.Add(pressedKey);
-                    if (pressedList[pressedList.Count() - 2] != pressedKey)
+                    if (!pressedList[pressedList.Count() - 2].Equals(pressedList[pressedList.Count() - 1].ToString()))
                     {
-                        BLOCK_MOVE[2] = 0;
+                        BLOCK_MOVE[0] = 0; BLOCK_MOVE[1] = 0; BLOCK_MOVE[2] = 0; BLOCK_MOVE[3] = 0;
                     }
-                    if (BLOCK_MOVE[2] == 0)
-                    {
                         mRight();
+                    if (BLOCK_MOVE[2] <= 24)
+                    {
                         ShuffleNumber();
+                    }
                         ReturnArray();
                         RefreshStatus();
-                        Console.Write("{0}, {1}, {2} |", BLOCK_MOVE[2], pressedKey, pressedList[pressedList.Count() - 2]);
-                    }
-                    break;
+                        Console.Write("{0}, {1}, {2}, {3}, {4} |", BLOCK_MOVE[2], pressedList[pressedList.Count() - 2], pressedList[pressedList.Count() - 1], pressedKey, POINTS);
+                     break;
 
                 case (Keys.Down):
                     pressedList.Add(pressedKey);
-                    if (pressedList[pressedList.Count() - 2] != pressedKey)
+                    if (!pressedList[pressedList.Count() - 2].Equals(pressedList[pressedList.Count() - 1].ToString()))
                     {
-                        BLOCK_MOVE[3] = 0;
+                        BLOCK_MOVE[0] = 0; BLOCK_MOVE[1] = 0; BLOCK_MOVE[2] = 0; BLOCK_MOVE[3] = 0;
                     }
-                    if (BLOCK_MOVE[3] == 0)
-                    {
                         mDown();
-                        ShuffleNumber();
+                        if (BLOCK_MOVE[3] <= 24)
+                        {
+                            ShuffleNumber();
+                        }
                         ReturnArray();
                         RefreshStatus();
-                        Console.Write("{0}, {1}, {2} |", BLOCK_MOVE[3], pressedKey, pressedList[pressedList.Count() - 2]);
-                    }
+                        Console.Write("{0}, {1}, {2}, {3}, {4} |", BLOCK_MOVE[3], pressedList[pressedList.Count() - 2], pressedList[pressedList.Count() - 1], pressedKey, POINTS);
                     break;
 
                 default:
@@ -390,6 +403,26 @@ namespace _2048_Application
                 SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
             }
         }
+        private void OpenConsoleToDebugMode()
+        {
+            ProcessStartInfo psi = new ProcessStartInfo("cmd.exe")
+            {
+                RedirectStandardError = true,
+                RedirectStandardInput = true,
+                RedirectStandardOutput = true,
+                UseShellExecute = false
+            };
+
+            Process p = Process.Start(psi);
+
+            StreamWriter sw = p.StandardInput;
+            StreamReader sr = p.StandardOutput;
+            foreach(var item in pressedList)
+            {
+                sw.WriteLine(item);
+            }
+            sr.Close();
+        }
         private void pictureBox1_Click(object sender, EventArgs e)
         {
             this.Close();
@@ -401,6 +434,32 @@ namespace _2048_Application
         private void pictureBox1_MouseLeave(object sender, EventArgs e)
         {
             this.pictureBox1.Image = ((System.Drawing.Image)(Properties.Resources.icon));
+        }
+        protected void RestartGame()
+        {
+            Board = new int[4, 4] { { 0, 0, 0, 0 }, { 0, 0, 0, 0 }, { 0, 0, 0, 0 }, { 0, 0, 0, 0 } };
+            POINTS = 0;
+            FirstPoint();
+            RefreshStatus();
+            pressedList.Add(Keys.Space.ToString());
+        }
+        protected void label1_Click(object sender, EventArgs e)
+        {
+            RestartGame();
+        }
+        private void label1_MouseLeave(object sender, EventArgs e)
+        {
+            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(119)))), ((int)(((byte)(110)))), ((int)(((byte)(101)))));
+        }
+
+        private void label1_MouseEnter(object sender, EventArgs e)
+        {
+            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(228)))), ((int)(((byte)(218)))));
+        }
+
+        private void label7_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
